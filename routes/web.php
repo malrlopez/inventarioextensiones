@@ -14,6 +14,9 @@ use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\HistorialController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ReporteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,35 +27,50 @@ use App\Http\Controllers\HistorialController;
 |
 */
 
+// Rutas de autenticación
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+
+// Rutas de registro (temporalmente accesibles para todos los usuarios autenticados)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 // Ruta raíz - redirecciona al dashboard
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-// Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Rutas protegidas que requieren autenticación
+Route::middleware(['auth'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Rutas para los recursos (CRUD)
-Route::resource('bloques', BloqueController::class);
-Route::resource('cargos', CargoController::class);
-Route::resource('empleados', EmpleadoController::class);
-Route::resource('extensiones', ExtensionController::class);
-Route::resource('historial', HistorialController::class);
-Route::resource('racks', RackController::class);
-Route::resource('sedes', SedeController::class);
-Route::resource('softphones', SoftphoneController::class);
-Route::resource('switches-equipos', SwitchEquipoController::class);
-Route::resource('ubicaciones', UbicacionController::class);
-Route::get('/switches', [SwitchEquipoController::class, 'index'])->name('switches.index');
-Route::get('/switches/create', [SwitchEquipoController::class, 'create'])->name('switches.create');
-Route::post('/switches', [SwitchEquipoController::class, 'store'])->name('switches.store');
-Route::get('/switches/{switchEquipo}', [SwitchEquipoController::class, 'show'])->name('switches.show');
-Route::get('/switches/{switchEquipo}/edit', [SwitchEquipoController::class, 'edit'])->name('switches.edit');
-Route::put('/switches/{switchEquipo}', [SwitchEquipoController::class, 'update'])->name('switches.update');
-Route::delete('/switches/{switchEquipo}', [SwitchEquipoController::class, 'destroy'])->name('switches.destroy');
-Route::resource('historial', HistorialController::class);
-//Route::redirect('historial-cambios', 'historial', 301);
-//Route::redirect('historial-cambios/{any}', 'historial/{any}', 301)->where('any', '.*');
+    // Rutas para los reportes (accesibles para todos los usuarios autenticados)
+    Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+    Route::match(['get', 'post'], '/reportes/generar', [ReporteController::class, 'generar'])->name('reportes.generar');
+
+    // Ruta para el buscador (debe ir antes de las rutas de recursos)
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+    // Rutas para los recursos (CRUD)
+    Route::resource('bloques', BloqueController::class);
+    Route::resource('cargos', CargoController::class);
+    Route::resource('empleados', EmpleadoController::class);
+    Route::get('/empleados/buscar/documento', [EmpleadoController::class, 'buscarPorDocumento'])->name('empleados.buscar');
+    Route::resource('extensiones', ExtensionController::class);
+    Route::resource('historial', HistorialController::class)->only(['index', 'show']);
+    Route::resource('racks', RackController::class);
+    Route::resource('sedes', SedeController::class);
+    Route::resource('softphones', SoftphoneController::class);
+    Route::resource('ubicaciones', UbicacionController::class);
+
+    // Rutas para SwitchEquipo con nombre más amigable "switches"
+    Route::resource('switches', SwitchEquipoController::class, ['parameters' => ['switches' => 'switchEquipo']]);
+});
 
 // Ruta para probar la conexión a la base de datos
 Route::get('/test-db-connection', [TestController::class, 'testDbConnection'])->name('test.db-connection');

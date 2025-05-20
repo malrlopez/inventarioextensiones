@@ -6,11 +6,6 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Historial de Cambios</h1>
-        <div>
-            <a href="{{ route('historial.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-1"></i> Nuevo Registro
-            </a>
-        </div>
     </div>
 
     @if(session('success'))
@@ -59,19 +54,9 @@
                                 <td>{{ $historial->created_at->format('d/m/Y H:i:s') }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('historial.show', $historial->id) }}" class="btn btn-sm btn-info">
+                                        <a href="{{ route('historial.show', $historial->id) }}" class="btn btn-sm btn-info" title="Ver detalles">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('historial.edit', $historial->id) }}" class="btn btn-sm btn-warning">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ route('historial.destroy', $historial->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar este registro?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
                                     </div>
                                 </td>
                             </tr>

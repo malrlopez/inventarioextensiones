@@ -15,7 +15,7 @@
             </a>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-4">
             <div class="card">
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-8">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -84,7 +84,7 @@
                                             <td>{{ $bloque->id_bloque }}</td>
                                             <td>{{ $bloque->nombre_bloque }}</td>
                                             <td>
-                                                <a href="{{ route('bloques.show', $bloque->id_bloque) }}" class="btn btn-sm btn-info">
+                                                <a href="{{ route('bloques.show', $bloque->id_bloque) }}" class="btn btn-sm btn-info text-white">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             </td>
@@ -127,7 +127,7 @@
                                             <td>{{ $ubicacion->planta_telefonica }}</td>
                                             <td>{{ $ubicacion->cuarto_tecnico }}</td>
                                             <td>
-                                                <a href="{{ route('ubicaciones.show', $ubicacion->id_ubicacion) }}" class="btn btn-sm btn-info">
+                                                <a href="{{ route('ubicaciones.show', $ubicacion->id_ubicacion) }}" class="btn btn-sm btn-info text-white">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             </td>
@@ -174,7 +174,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="{{ route('empleados.show', $empleado->id_empleado) }}" class="btn btn-sm btn-info">
+                                                <a href="{{ route('empleados.show', $empleado->id_empleado) }}" class="btn btn-sm btn-info text-white">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             </td>
@@ -196,13 +196,13 @@
             </div>
         </div>
     </div>
-    
+
     <div class="mt-3">
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
             <i class="fas fa-trash me-1"></i> Eliminar Sede
         </button>
     </div>
-    
+
     <!-- Modal de confirmación de eliminación -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">

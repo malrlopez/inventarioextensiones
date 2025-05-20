@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Rack;
 use App\Models\Ubicacion;
 use Illuminate\Http\Request;
+use App\Exports\RacksExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RackController extends Controller
 {
@@ -93,5 +96,48 @@ class RackController extends Controller
 
         return redirect()->route('racks.index')
             ->with('success', 'Rack eliminado exitosamente');
+    }
+
+    public function export(Request $request)
+    {
+        $racks = Rack::with(['ubicacion.sede'])->get();
+
+        switch ($request->format) {
+            case 'excel':
+                return Excel::download(new RacksExport($racks), 'racks_' . now()->format('Y-m-d') . '.xlsx');
+
+            case 'csv':
+                return Excel::download(new RacksExport($racks), 'racks_' . now()->format('Y-m-d') . '.csv', \Maatwebsite\Excel\Excel::CSV);
+
+            case 'pdf':
+                $headings = [
+                    'Nombre',
+                    'Ubicación',
+                    'Sede',
+                    'Descripción',
+                    'Estado',
+                    'Última Actualización'
+                ];
+
+                $rows = $racks->map(function ($rack) {
+                    return [
+                        $rack->nombre,
+                        $rack->ubicacion ? $rack->ubicacion->oficina : 'N/A',
+                        $rack->ubicacion && $rack->ubicacion->sede ? $rack->ubicacion->sede->nombre_sede : 'N/A',
+                        $rack->descripcion ?? 'N/A',
+                        $rack->estado,
+                        $rack->updated_at ? $rack->updated_at->format('d/m/Y H:i') : 'N/A'
+                    ];
+                });
+
+                $pdf = PDF::loadView('exports.pdf', [
+                    'headings' => $headings,
+                    'rows' => $rows
+                ]);
+                return $pdf->download('racks_' . now()->format('Y-m-d') . '.pdf');
+
+            default:
+                return back()->with('error', 'Formato de exportación no válido');
+        }
     }
 }

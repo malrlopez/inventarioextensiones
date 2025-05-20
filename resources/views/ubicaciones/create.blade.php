@@ -10,7 +10,7 @@
             <i class="fas fa-arrow-left me-1"></i> Volver
         </a>
     </div>
-    
+
     <div class="card">
         <div class="card-body">
             @if ($errors->any())
@@ -22,10 +22,18 @@
                     </ul>
                 </div>
             @endif
-            
+
+            @if(session('warning'))
+                <div class="alert alert-warning">
+                    {!! session('warning') !!}
+                    <hr>
+                    <p class="mb-0">¿Desea continuar con la creación de la ubicación?</p>
+                </div>
+            @endif
+
             <form action="{{ route('ubicaciones.store') }}" method="POST">
                 @csrf
-                
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="id_sede" class="form-label">Sede *</label>
@@ -41,7 +49,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
                     <div class="col-md-6 mb-3">
                         <label for="id_bloque" class="form-label">Bloque *</label>
                         <select class="form-select @error('id_bloque') is-invalid @enderror" id="id_bloque" name="id_bloque" required>
@@ -57,7 +65,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="oficina" class="form-label">Oficina *</label>
@@ -66,7 +74,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
                     <div class="col-md-6 mb-3">
                         <label for="planta_telefonica" class="form-label">Planta Telefónica</label>
                         <input type="text" class="form-control @error('planta_telefonica') is-invalid @enderror" id="planta_telefonica" name="planta_telefonica" value="{{ old('planta_telefonica') }}">
@@ -75,7 +83,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="cuarto_tecnico" class="form-label">Cuarto Técnico</label>
@@ -84,7 +92,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
                     <div class="col-md-6 mb-3">
                         <label for="rack" class="form-label">Rack</label>
                         <input type="text" class="form-control @error('rack') is-invalid @enderror" id="rack" name="rack" value="{{ old('rack') }}">
@@ -93,7 +101,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="patch_panel" class="form-label">Patch Panel</label>
@@ -102,7 +110,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
                     <div class="col-md-6 mb-3">
                         <label for="faceplate" class="form-label">Faceplate</label>
                         <input type="text" class="form-control @error('faceplate') is-invalid @enderror" id="faceplate" name="faceplate" value="{{ old('faceplate') }}">
@@ -111,7 +119,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                     <button type="reset" class="btn btn-outline-secondary">Limpiar</button>
                     <button type="submit" class="btn btn-primary">Guardar Ubicación</button>
@@ -128,19 +136,19 @@
         const sedeId = this.value;
         const bloqueSelect = document.getElementById('id_bloque');
         const bloqueOptions = bloqueSelect.querySelectorAll('option');
-        
+
         // Mostrar u ocultar opciones según la sede seleccionada
         bloqueOptions.forEach(option => {
             if (option.value === '') {
                 // No hacer nada con la opción "Seleccione un bloque..."
             } else {
                 const bloqueSede = option.getAttribute('data-sede');
-                
+
                 if (sedeId === '' || sedeId === bloqueSede) {
                     option.style.display = 'block';
                 } else {
                     option.style.display = 'none';
-                    
+
                     // Deseleccionar si estaba seleccionado
                     if (option.selected) {
                         option.selected = false;
@@ -148,7 +156,7 @@
                 }
             }
         });
-        
+
         // Seleccionar la primera opción visible (que no sea la de "Seleccione un bloque...")
         let firstVisibleSelected = false;
         bloqueOptions.forEach(option => {
@@ -157,7 +165,7 @@
                 firstVisibleSelected = true;
             }
         });
-        
+
         // Si no hay opciones visibles, seleccionar la opción "Seleccione un bloque..."
         if (!firstVisibleSelected) {
             bloqueOptions[0].selected = true;

@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Ubicacion;
 use App\Models\Sede;
 use App\Models\Bloque;
+use App\Models\Extension;
+use App\Exports\UbicacionesExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UbicacionController extends Controller
 {
@@ -44,7 +48,29 @@ class UbicacionController extends Controller
             'id_bloque' => 'required|exists:bloques,id_bloque',
         ]);
 
-        Ubicacion::create($request->all());
+        // Verificar si existen extensiones en ubicaciones con el mismo nombre de oficina
+        $ubicacionesSimilares = Ubicacion::where('oficina', 'LIKE', '%' . $request->oficina . '%')->get();
+
+        if ($ubicacionesSimilares->isNotEmpty()) {
+            $extensionesExistentes = Extension::whereIn('id_ubicacion', $ubicacionesSimilares->pluck('id_ubicacion'))->get();
+
+            if ($extensionesExistentes->isNotEmpty()) {
+                $mensaje = 'Se encontraron extensiones en oficinas con nombre similar:<br>';
+                foreach ($extensionesExistentes as $extension) {
+                    $ubicacion = $extension->ubicacion;
+                    $mensaje .= "- Extensión {$extension->numero_extension} en oficina \"{$ubicacion->oficina}\"<br>";
+                    $mensaje .= "&nbsp;&nbsp;(Sede: {$ubicacion->sede->nombre_sede}, ";
+                    $mensaje .= "Bloque: {$ubicacion->bloque->nombre})<br>";
+                }
+
+                return back()
+                    ->withInput()
+                    ->with('warning', $mensaje);
+            }
+        }
+
+        // Si no hay extensiones existentes o el usuario decide continuar
+        $ubicacion = Ubicacion::create($request->all());
 
         return redirect()->route('ubicaciones.index')
             ->with('success', 'Ubicación creada exitosamente');
@@ -106,5 +132,48 @@ class UbicacionController extends Controller
 
         return redirect()->route('ubicaciones.index')
             ->with('success', 'Ubicación eliminada exitosamente');
+    }
+
+    public function export(Request $request)
+    {
+        $ubicaciones = Ubicacion::with(['sede'])->get();
+
+        switch ($request->format) {
+            case 'excel':
+                return Excel::download(new UbicacionesExport($ubicaciones), 'ubicaciones_' . now()->format('Y-m-d') . '.xlsx');
+
+            case 'csv':
+                return Excel::download(new UbicacionesExport($ubicaciones), 'ubicaciones_' . now()->format('Y-m-d') . '.csv', \Maatwebsite\Excel\Excel::CSV);
+
+            case 'pdf':
+                $headings = [
+                    'Oficina',
+                    'Sede',
+                    'Piso',
+                    'Descripción',
+                    'Estado',
+                    'Última Actualización'
+                ];
+
+                $rows = $ubicaciones->map(function ($ubicacion) {
+                    return [
+                        $ubicacion->oficina,
+                        $ubicacion->sede ? $ubicacion->sede->nombre_sede : 'N/A',
+                        $ubicacion->piso ?? 'N/A',
+                        $ubicacion->descripcion ?? 'N/A',
+                        $ubicacion->estado,
+                        $ubicacion->updated_at ? $ubicacion->updated_at->format('d/m/Y H:i') : 'N/A'
+                    ];
+                });
+
+                $pdf = PDF::loadView('exports.pdf', [
+                    'headings' => $headings,
+                    'rows' => $rows
+                ]);
+                return $pdf->download('ubicaciones_' . now()->format('Y-m-d') . '.pdf');
+
+            default:
+                return back()->with('error', 'Formato de exportación no válido');
+        }
     }
 }

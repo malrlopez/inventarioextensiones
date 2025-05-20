@@ -7,14 +7,15 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Detalle de la Extensión: {{ $extension->numero_extension }}</h1>
         <div>
-        <a href="{{ route('extensiones.edit', ['extensione' => $extension]) }}" class="btn btn-warning">Editar</a>
-        </a>
-        <a href="{{ route('extensiones.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i> Volver
-        </a>
+            <a href="{{ route('extensiones.edit', ['extensione' => $extension]) }}" class="btn btn-warning">
+                <i class="fas fa-edit me-1"></i> Editar
+            </a>
+            <a href="{{ route('extensiones.index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Volver
+            </a>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -46,7 +47,7 @@
                     </table>
                 </div>
             </div>
-            
+
             <div class="card mt-4">
                 <div class="card-header bg-info text-white">
                     <h5 class="mb-0">Historial de Cambios</h5>
@@ -74,14 +75,10 @@
                             </tbody>
                         </table>
                     </div>
-                    
-                    <a href="{{ route('historial.create') }}" class="btn btn-sm btn-success mt-2">
-                        <i class="fas fa-plus me-1"></i> Registrar Cambio
-                    </a>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header bg-success text-white">
@@ -100,8 +97,8 @@
                                 <p class="mb-0"><i class="fas fa-id-card me-1"></i> {{ $extension->empleado->numero_cedula }}</p>
                             </div>
                         </div>
-                        
-                        <a href="{{ route('empleados.show', $extension->empleado->id_empleado) }}" class="btn btn-sm btn-primary">
+
+                        <a href="{{ route('empleados.show', $extension->empleado->id_empleado) }}" class="btn btn-info text-white">
                             <i class="fas fa-eye me-1"></i> Ver Detalles del Empleado
                         </a>
                     @else
@@ -109,7 +106,7 @@
                     @endif
                 </div>
             </div>
-            
+
             <div class="card mt-4">
                 <div class="card-header bg-warning text-dark">
                     <h5 class="mb-0">Ubicación</h5>
@@ -138,8 +135,8 @@
                                 <td>{{ $extension->ubicacion->cuarto_tecnico ?? 'N/A' }}</td>
                             </tr>
                         </table>
-                        
-                        <a href="{{ route('ubicaciones.show', $extension->ubicacion->id_ubicacion) }}" class="btn btn-sm btn-primary">
+
+                        <a href="{{ route('ubicaciones.show', $extension->ubicacion->id_ubicacion) }}" class="btn btn-info text-white">
                             <i class="fas fa-eye me-1"></i> Ver Detalles de la Ubicación
                         </a>
                     @else
@@ -147,7 +144,7 @@
                     @endif
                 </div>
             </div>
-            
+
             <div class="card mt-4">
                 <div class="card-header bg-danger text-white">
                     <h5 class="mb-0">Softphone</h5>
@@ -164,8 +161,8 @@
                                 <td>{{ $extension->softphone->dispositivo }}</td>
                             </tr>
                         </table>
-                        
-                        <a href="{{ route('softphones.show', $extension->softphone->id_softphone) }}" class="btn btn-sm btn-primary">
+
+                        <a href="{{ route('softphones.show', $extension->softphone->id_softphone) }}" class="btn btn-info text-white">
                             <i class="fas fa-eye me-1"></i> Ver Detalles del Softphone
                         </a>
                     @else
@@ -175,13 +172,13 @@
             </div>
         </div>
     </div>
-    
+
     <div class="mt-3">
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
             <i class="fas fa-trash me-1"></i> Eliminar Extensión
         </button>
     </div>
-    
+
     <!-- Modal de confirmación de eliminación -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -15,7 +15,7 @@
             </a>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-5">
             <div class="card">
@@ -39,14 +39,18 @@
                         <tr>
                             <th>Clave:</th>
                             <td>
-                                <span class="text-muted">******</span>
+                                <span id="passwordField" class="text-muted">******</span>
+                                <span id="actualPassword" class="d-none">{{ $softphone->clave_softphone }}</span>
+                                <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="togglePassword()">
+                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                </button>
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-7">
             <div class="card">
                 <div class="card-header bg-info text-white">
@@ -78,7 +82,7 @@
                                     </td>
                                     <td>
                                         @if($extension->ubicacion)
-                                            {{ $extension->ubicacion->oficina ?? 'N/A' }} 
+                                            {{ $extension->ubicacion->oficina ?? 'N/A' }}
                                             ({{ optional($extension->ubicacion->sede)->nombre_sede ?? 'N/A' }})
                                         @else
                                             <span class="text-muted">No asignado</span>
@@ -98,7 +102,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <a href="{{ route('extensiones.create') }}" class="btn btn-sm btn-success mt-2">
                         <i class="fas fa-plus me-1"></i> Agregar Extensión
                     </a>
@@ -106,13 +110,13 @@
             </div>
         </div>
     </div>
-    
+
     <div class="mt-3">
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
             <i class="fas fa-trash me-1"></i> Eliminar Softphone
         </button>
     </div>
-    
+
     <!-- Modal de confirmación de eliminación -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -142,4 +146,24 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+function togglePassword() {
+    const passwordField = document.getElementById('passwordField');
+    const actualPassword = document.getElementById('actualPassword');
+    const toggleIcon = document.getElementById('toggleIcon');
+
+    if (passwordField.textContent === '******') {
+        passwordField.textContent = actualPassword.textContent;
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.textContent = '******';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+</script>
 @endsection

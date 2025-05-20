@@ -8,20 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class Softphone extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'softphones';
     protected $primaryKey = 'id_softphone';
     public $timestamps = false;
-    
+
     protected $fillable = [
         'usuario',
         'dispositivo',
         'clave_softphone'
     ];
-    
+
     // Relación con Extensiones
     public function extensiones()
     {
         return $this->hasMany(Extension::class, 'id_softphone');
+    }
+
+    // Relación con Empleado
+    public function empleado()
+    {
+        return $this->belongsTo(Empleado::class, 'id_empleado');
     }
 }

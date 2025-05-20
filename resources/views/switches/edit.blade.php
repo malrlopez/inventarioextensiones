@@ -23,14 +23,14 @@
                 </div>
             @endif
             
-            <form action="{{ route('switches.update', $switch->id_switch) }}" method="POST">
+            <form action="{{ route('switches.update', $switchEquipo->id_switch) }}" method="POST">
                 @csrf
                 @method('PUT')
                 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="marca" class="form-label">Marca *</label>
-                        <input type="text" class="form-control @error('marca') is-invalid @enderror" id="marca" name="marca" value="{{ old('marca', $switch->marca) }}" required>
+                        <input type="text" class="form-control @error('marca') is-invalid @enderror" id="marca" name="marca" value="{{ old('marca', $switchEquipo->marca) }}" required>
                         @error('marca')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -38,7 +38,7 @@
                     
                     <div class="col-md-6 mb-3">
                         <label for="referencia" class="form-label">Referencia *</label>
-                        <input type="text" class="form-control @error('referencia') is-invalid @enderror" id="referencia" name="referencia" value="{{ old('referencia', $switch->referencia) }}" required>
+                        <input type="text" class="form-control @error('referencia') is-invalid @enderror" id="referencia" name="referencia" value="{{ old('referencia', $switchEquipo->referencia) }}" required>
                         @error('referencia')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="puerto_switche_asignado" class="form-label">Puerto Asignado *</label>
-                        <input type="text" class="form-control @error('puerto_switche_asignado') is-invalid @enderror" id="puerto_switche_asignado" name="puerto_switche_asignado" value="{{ old('puerto_switche_asignado', $switch->puerto_switche_asignado) }}" required>
+                        <input type="text" class="form-control @error('puerto_switche_asignado') is-invalid @enderror" id="puerto_switche_asignado" name="puerto_switche_asignado" value="{{ old('puerto_switche_asignado', $switchEquipo->puerto_switche_asignado) }}" required>
                         @error('puerto_switche_asignado')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -56,7 +56,7 @@
                     
                     <div class="col-md-4 mb-3">
                         <label for="vlan" class="form-label">VLAN *</label>
-                        <input type="text" class="form-control @error('vlan') is-invalid @enderror" id="vlan" name="vlan" value="{{ old('vlan', $switch->vlan) }}" required>
+                        <input type="text" class="form-control @error('vlan') is-invalid @enderror" id="vlan" name="vlan" value="{{ old('vlan', $switchEquipo->vlan) }}" required>
                         @error('vlan')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -67,7 +67,7 @@
                         <select class="form-select @error('id_rack') is-invalid @enderror" id="id_rack" name="id_rack" required>
                             <option value="">Seleccione un rack...</option>
                             @foreach($racks as $rack)
-                                <option value="{{ $rack->id_rack }}" {{ old('id_rack', $switch->id_rack) == $rack->id_rack ? 'selected' : '' }}>
+                                <option value="{{ $rack->id_rack }}" {{ old('id_rack', $switchEquipo->id_rack) == $rack->id_rack ? 'selected' : '' }}>
                                     {{ $rack->marca }} {{ $rack->referencia }} - 
                                     @if($rack->ubicacion)
                                         {{ optional($rack->ubicacion->sede)->nombre_sede ?? 'N/A' }}
@@ -86,7 +86,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="total_puertos" class="form-label">Total de Puertos *</label>
-                        <input type="number" class="form-control @error('total_puertos') is-invalid @enderror" id="total_puertos" name="total_puertos" value="{{ old('total_puertos', $switch->total_puertos) }}" min="1" required>
+                        <input type="number" class="form-control @error('total_puertos') is-invalid @enderror" id="total_puertos" name="total_puertos" value="{{ old('total_puertos', $switchEquipo->total_puertos) }}" min="1" required>
                         @error('total_puertos')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -94,7 +94,7 @@
                     
                     <div class="col-md-6 mb-3">
                         <label for="puertos_disponibles" class="form-label">Puertos Disponibles *</label>
-                        <input type="number" class="form-control @error('puertos_disponibles') is-invalid @enderror" id="puertos_disponibles" name="puertos_disponibles" value="{{ old('puertos_disponibles', $switch->puertos_disponibles) }}" min="0" required>
+                        <input type="number" class="form-control @error('puertos_disponibles') is-invalid @enderror" id="puertos_disponibles" name="puertos_disponibles" value="{{ old('puertos_disponibles', $switchEquipo->puertos_disponibles) }}" min="0" required>
                         @error('puertos_disponibles')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

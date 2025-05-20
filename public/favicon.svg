@@ -1,0 +1,31 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Definición de gradientes -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#005C8E" />
+      <stop offset="100%" stop-color="#00264D" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4CAAFF" />
+      <stop offset="100%" stop-color="#0078D7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Círculo de fondo -->
+  <circle cx="32" cy="32" r="30" fill="url(#bgGradient)" />
+
+  <!-- Hexágono simplificado -->
+  <path d="M32 12 L46 20 L46 36 L32 44 L18 36 L18 20 Z" fill="none" stroke="#4CAAFF" stroke-width="1.5" stroke-linejoin="round" opacity="0.7" />
+
+  <!-- Teléfono estilizado simplificado -->
+  <path d="M27 18 C25 18 23 20 23 23 L23 41 C23 44 25 46 27 46 L37 46 C39 46 41 44 41 41 L41 23 C41 20 39 18 37 18 Z" fill="url(#accentGradient)" />
+
+  <!-- Pantalla del teléfono -->
+  <rect x="26" y="22" width="12" height="10" rx="1" fill="#001B3B" />
+
+  <!-- Botón del teléfono -->
+  <circle cx="32" cy="38" r="4" fill="#001B3B" />
+
+  <!-- Inicial "S" estilizada -->
+  <text x="32" y="30" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="white">S</text>
+</svg>

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cargo;
+use App\Exports\CargosExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CargoController extends Controller
 {
@@ -85,5 +88,46 @@ class CargoController extends Controller
 
         return redirect()->route('cargos.index')
             ->with('success', 'Cargo eliminado exitosamente');
+    }
+
+    public function export(Request $request)
+    {
+        $cargos = Cargo::all();
+
+        switch ($request->format) {
+            case 'excel':
+                return Excel::download(new CargosExport($cargos), 'cargos_' . now()->format('Y-m-d') . '.xlsx');
+
+            case 'csv':
+                return Excel::download(new CargosExport($cargos), 'cargos_' . now()->format('Y-m-d') . '.csv', \Maatwebsite\Excel\Excel::CSV);
+
+            case 'pdf':
+                $headings = [
+                    'Nombre',
+                    'Descripción',
+                    'Departamento',
+                    'Estado',
+                    'Última Actualización'
+                ];
+
+                $rows = $cargos->map(function ($cargo) {
+                    return [
+                        $cargo->nombre_cargo,
+                        $cargo->descripcion ?? 'N/A',
+                        $cargo->departamento ?? 'N/A',
+                        $cargo->estado,
+                        $cargo->updated_at ? $cargo->updated_at->format('d/m/Y H:i') : 'N/A'
+                    ];
+                });
+
+                $pdf = PDF::loadView('exports.pdf', [
+                    'headings' => $headings,
+                    'rows' => $rows
+                ]);
+                return $pdf->download('cargos_' . now()->format('Y-m-d') . '.pdf');
+
+            default:
+                return back()->with('error', 'Formato de exportación no válido');
+        }
     }
 }

@@ -5,12 +5,24 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Sedes</h1>
-        <a href="{{ route('sedes.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Nueva Sede
-        </a>
+        <h1>Listado de Sedes</h1>
+        <div class="d-flex gap-2">
+            <form action="{{ route('reportes.generar') }}" method="POST" class="me-2">
+                @csrf
+                <input type="hidden" name="tipo" value="por_sede">
+                <input type="hidden" name="formato" value="html">
+                <button type="submit" class="btn btn-warning">
+                    <i class="fas fa-chart-bar me-1"></i> Generar Reporte
+                </button>
+            </form>
+            @if(Auth::user()->role !== 'viewer')
+            <a href="{{ route('sedes.create') }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-1"></i> Nueva Sede
+            </a>
+            @endif
+        </div>
     </div>
-    
+
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
@@ -43,33 +55,13 @@
                                     <a href="{{ route('sedes.edit', $sede->id_sede) }}" class="btn btn-sm btn-warning" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $sede->id_sede }}" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                                
-                                <!-- Modal de confirmación de eliminación -->
-                                <div class="modal fade" id="deleteModal{{ $sede->id_sede }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Está seguro de que desea eliminar la sede <strong>{{ $sede->nombre_sede }}</strong>?
-                                                <br>Esta acción no se puede deshacer.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <form action="{{ route('sedes.destroy', $sede->id_sede) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <form action="{{ route('sedes.destroy', $sede->id_sede) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Está seguro de que desea eliminar la sede {{ $sede->nombre_sede }}? Esta acción no se puede deshacer.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

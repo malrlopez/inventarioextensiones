@@ -41,6 +41,6 @@ class Extension extends Model
     // Relación con HistorialCambios
     public function historialCambios()
     {
-        return $this->hasMany(Historial::class, 'id_extension');
+        return $this->hasMany(Historial::class, 'registro_id', 'id_extension');
     }
 }

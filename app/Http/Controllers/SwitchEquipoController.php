@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\SwitchEquipo;
 use App\Models\Rack;
+use App\Exports\SwitchesExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SwitchEquipoController extends Controller
 {
@@ -98,5 +101,52 @@ class SwitchEquipoController extends Controller
 
         return redirect()->route('switches.index')
             ->with('success', 'Switch eliminado exitosamente');
+    }
+
+    public function export(Request $request)
+    {
+        $switches = SwitchEquipo::all();
+
+        switch ($request->format) {
+            case 'excel':
+                return Excel::download(new SwitchesExport($switches), 'switches_' . now()->format('Y-m-d') . '.xlsx');
+
+            case 'csv':
+                return Excel::download(new SwitchesExport($switches), 'switches_' . now()->format('Y-m-d') . '.csv', \Maatwebsite\Excel\Excel::CSV);
+
+            case 'pdf':
+                $headings = [
+                    'Nombre',
+                    'Marca',
+                    'Modelo',
+                    'Número de Serie',
+                    'Puertos',
+                    'IP',
+                    'Estado',
+                    'Última Actualización'
+                ];
+
+                $rows = $switches->map(function ($switch) {
+                    return [
+                        $switch->nombre,
+                        $switch->marca ?? 'N/A',
+                        $switch->modelo ?? 'N/A',
+                        $switch->numero_serie ?? 'N/A',
+                        $switch->puertos ?? 'N/A',
+                        $switch->ip ?? 'N/A',
+                        $switch->estado,
+                        $switch->updated_at ? $switch->updated_at->format('d/m/Y H:i') : 'N/A'
+                    ];
+                });
+
+                $pdf = PDF::loadView('exports.pdf', [
+                    'headings' => $headings,
+                    'rows' => $rows
+                ]);
+                return $pdf->download('switches_' . now()->format('Y-m-d') . '.pdf');
+
+            default:
+                return back()->with('error', 'Formato de exportación no válido');
+        }
     }
 }
