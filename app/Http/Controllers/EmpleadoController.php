@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Empleado;
 use App\Models\Cargo;
 use App\Models\Sede;
+use App\Exports\EmpleadosExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EmpleadoController extends Controller
 {
@@ -105,5 +108,79 @@ class EmpleadoController extends Controller
 
         return redirect()->route('empleados.index')
             ->with('success', 'Empleado eliminado exitosamente');
+    }
+
+    public function export(Request $request)
+    {
+        $empleados = Empleado::with(['cargo'])->get();
+
+        switch ($request->format) {
+            case 'excel':
+                return Excel::download(new EmpleadosExport($empleados), 'empleados_' . now()->format('Y-m-d') . '.xlsx');
+
+            case 'csv':
+                return Excel::download(new EmpleadosExport($empleados), 'empleados_' . now()->format('Y-m-d') . '.csv', \Maatwebsite\Excel\Excel::CSV);
+
+            case 'pdf':
+                $headings = [
+                    'Nombre',
+                    'Apellido',
+                    'Cargo',
+                    'Email',
+                    'Teléfono',
+                    'Estado',
+                    'Última Actualización'
+                ];
+
+                $rows = $empleados->map(function ($empleado) {
+                    return [
+                        $empleado->nombre,
+                        $empleado->apellido,
+                        $empleado->cargo ? $empleado->cargo->nombre : 'N/A',
+                        $empleado->email ?? 'N/A',
+                        $empleado->telefono ?? 'N/A',
+                        $empleado->estado,
+                        $empleado->updated_at ? $empleado->updated_at->format('d/m/Y H:i') : 'N/A'
+                    ];
+                });
+
+                $pdf = PDF::loadView('exports.pdf', [
+                    'headings' => $headings,
+                    'rows' => $rows
+                ]);
+                return $pdf->download('empleados_' . now()->format('Y-m-d') . '.pdf');
+
+            default:
+                return back()->with('error', 'Formato de exportación no válido');
+        }
+    }
+
+    /**
+     * Buscar empleado por número de documento
+     */
+    public function buscarPorDocumento(Request $request)
+    {
+        $documento = $request->input('documento');
+        
+        if (!$documento) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Debe proporcionar un número de documento'
+            ]);
+        }
+        
+        $empleado = Empleado::where('numero_cedula', $documento)->first();
+        
+        if ($empleado) {
+            return response()->json([
+                'success' => true,
+                'empleado' => $empleado
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró ningún empleado con ese número de documento'
+            ]);
+        }
     }
 }

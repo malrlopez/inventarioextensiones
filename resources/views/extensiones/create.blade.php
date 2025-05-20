@@ -69,17 +69,20 @@
                 
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label for="id_empleado" class="form-label">Empleado Asignado *</label>
-                        <select class="form-select @error('id_empleado') is-invalid @enderror" id="id_empleado" name="id_empleado" required>
-                            <option value="">Seleccione un empleado...</option>
-                            @foreach($empleados as $empleado)
-                                <option value="{{ $empleado->id_empleado }}" {{ old('id_empleado') == $empleado->id_empleado ? 'selected' : '' }}>
-                                    {{ $empleado->nombre }} {{ $empleado->apellido }} ({{ $empleado->codigo_marcacion }})
-                                </option>
-                            @endforeach
-                        </select>
+                        <label for="buscar_documento" class="form-label">Buscar Empleado por Documento *</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="buscar_documento" placeholder="Ingrese número de documento">
+                            <button class="btn btn-outline-secondary" type="button" id="buscar_empleado_btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">Busque un empleado por su número de documento</div>
+                        
+                        <div id="resultado_busqueda" class="mt-2"></div>
+                        
+                        <input type="hidden" name="id_empleado" id="id_empleado" value="{{ old('id_empleado') }}" required>
                         @error('id_empleado')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
                     
@@ -124,4 +127,70 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        // Buscador de empleados por documento
+        $('#buscar_empleado_btn').click(function() {
+            buscarEmpleado();
+        });
+        
+        // Permitir buscar con Enter
+        $('#buscar_documento').keypress(function(e) {
+            if(e.which == 13) { // 13 es el código de tecla para Enter
+                e.preventDefault();
+                buscarEmpleado();
+            }
+        });
+        
+        function buscarEmpleado() {
+            var documento = $('#buscar_documento').val().trim();
+            if (documento === '') {
+                $('#resultado_busqueda').html('<div class="alert alert-warning">Ingrese un número de documento para buscar</div>');
+                return;
+            }
+            
+            // Mostrar indicador de carga
+            $('#resultado_busqueda').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando...</div>');
+            
+            // Realizar la búsqueda mediante AJAX
+            $.ajax({
+                url: '{{ route("empleados.buscar") }}',
+                type: 'GET',
+                data: { documento: documento },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.success && data.empleado) {
+                        // Mostrar resultados y establecer el ID del empleado
+                        $('#resultado_busqueda').html(
+                            '<div class="alert alert-success empleado-seleccionado">' +
+                                '<strong>Empleado encontrado:</strong> ' + data.empleado.numero_cedula + ' - ' + 
+                                data.empleado.nombre + ' ' + data.empleado.apellido +
+                                '<button type="button" class="btn-close float-end" aria-label="Close"></button>' +
+                            '</div>'
+                        );
+                        $('#id_empleado').val(data.empleado.id_empleado);
+                        
+                        // Agregar evento para quitar la selección
+                        $('.empleado-seleccionado .btn-close').click(function() {
+                            $('#resultado_busqueda').empty();
+                            $('#id_empleado').val('');
+                            $('#buscar_documento').val('');
+                        });
+                    } else {
+                        // Mostrar mensaje de error
+                        $('#resultado_busqueda').html('<div class="alert alert-danger">No se encontró ningún empleado con ese documento</div>');
+                        $('#id_empleado').val('');
+                    }
+                },
+                error: function() {
+                    $('#resultado_busqueda').html('<div class="alert alert-danger">Error al realizar la búsqueda</div>');
+                    $('#id_empleado').val('');
+                }
+            });
+        }
+    });
+</script>
 @endsection

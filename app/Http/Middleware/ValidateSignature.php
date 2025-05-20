@@ -1,4 +1,13 @@
-<?php
+<!-- Antes (problema): -->
+<a href="{{ route('reportes.generar', array_merge(request()->all(), ['formato' => 'excel'])) }}">Excel</a>
+
+<!-- Ahora (solución): -->
+<form action="{{ route('reportes.generar') }}" method="POST" class="m-0 p-0 inline">
+    @csrf
+    <!-- Preservar todos los parámetros actuales -->
+    <input type="hidden" name="formato" value="excel">
+    <button type="submit" class="...">Excel</button>
+</form><?php
 
 namespace App\Http\Middleware;
 

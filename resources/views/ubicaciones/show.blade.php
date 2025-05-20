@@ -15,7 +15,7 @@
             </a>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -63,7 +63,7 @@
                     </table>
                 </div>
             </div>
-            
+
             <div class="card mt-4">
                 <div class="card-header bg-info text-white">
                     <h5 class="mb-0">Racks en esta Ubicación</h5>
@@ -99,14 +99,14 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <a href="{{ route('racks.create') }}" class="btn btn-sm btn-success mt-2">
                         <i class="fas fa-plus me-1"></i> Agregar Rack
                     </a>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header bg-success text-white">
@@ -149,13 +149,13 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <a href="{{ route('extensiones.create') }}" class="btn btn-sm btn-success mt-2">
                         <i class="fas fa-plus me-1"></i> Agregar Extensión
                     </a>
                 </div>
             </div>
-            
+
             <div class="card mt-4">
                 <div class="card-header bg-warning text-dark">
                     <h5 class="mb-0">Historial de Cambios en esta Ubicación</h5>
@@ -183,18 +183,18 @@
                                     // Tomar solo los primeros 5
                                     $historiales = array_slice($historiales, 0, 5);
                                 @endphp
-                                
+
                                 @forelse($historiales as $cambio)
                                 <tr>
                                     <td>{{ date('d/m/Y H:i', strtotime($cambio['fecha_cambio'])) }}</td>
                                     <td>
                                         @foreach($ubicacion->extensiones as $extension)
-                                            @if($extension->id_extension == $cambio['id_extension'])
+                                            @if(isset($cambio['id_extension']) && $extension->id_extension == $cambio['id_extension'])
                                                 {{ $extension->numero_extension }}
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td>{{ Str::limit($cambio['descripcion_cambio'], 50) }}</td>
+                                    <td>{{ isset($cambio['descripcion_cambio']) ? Str::limit($cambio['descripcion_cambio'], 50) : 'Sin descripción' }}</td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -204,21 +204,17 @@
                             </tbody>
                         </table>
                     </div>
-                    
-                    <a href="{{ route('historial.create') }}" class="btn btn-sm btn-success mt-2">
-                        <i class="fas fa-plus me-1"></i> Registrar Cambio
-                    </a>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="mt-3">
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
             <i class="fas fa-trash me-1"></i> Eliminar Ubicación
         </button>
     </div>
-    
+
     <!-- Modal de confirmación de eliminación -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Softphone;
+use App\Exports\SoftphonesExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SoftphoneController extends Controller
 {
@@ -12,7 +15,7 @@ class SoftphoneController extends Controller
      */
     public function index()
     {
-        $softphones = Softphone::withCount('extensiones')->get();
+        $softphones = Softphone::all();
         return view('softphones.index', compact('softphones'));
     }
 
@@ -30,15 +33,20 @@ class SoftphoneController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'usuario' => 'required|unique:softphones,usuario',
+            'usuario' => 'required',
             'dispositivo' => 'required',
-            'clave_softphone' => 'required',
+            'clave_softphone' => 'required'
         ]);
 
-        Softphone::create($request->all());
-
-        return redirect()->route('softphones.index')
-            ->with('success', 'Softphone creado exitosamente');
+        try {
+            Softphone::create($request->all());
+            return redirect()->route('softphones.index')
+                ->with('success', 'Softphone creado exitosamente');
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Error al crear el softphone: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     /**
@@ -46,7 +54,6 @@ class SoftphoneController extends Controller
      */
     public function show(Softphone $softphone)
     {
-        $softphone->load('extensiones');
         return view('softphones.show', compact('softphone'));
     }
 
@@ -64,15 +71,20 @@ class SoftphoneController extends Controller
     public function update(Request $request, Softphone $softphone)
     {
         $request->validate([
-            'usuario' => 'required|unique:softphones,usuario,' . $softphone->id_softphone . ',id_softphone',
+            'usuario' => 'required',
             'dispositivo' => 'required',
-            'clave_softphone' => 'required',
+            'clave_softphone' => 'required'
         ]);
 
-        $softphone->update($request->all());
-
-        return redirect()->route('softphones.index')
-            ->with('success', 'Softphone actualizado exitosamente');
+        try {
+            $softphone->update($request->all());
+            return redirect()->route('softphones.index')
+                ->with('success', 'Softphone actualizado exitosamente');
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Error al actualizar el softphone: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     /**
@@ -80,15 +92,53 @@ class SoftphoneController extends Controller
      */
     public function destroy(Softphone $softphone)
     {
-        // Verificar si el softphone tiene extensiones asociadas
-        if ($softphone->extensiones->count() > 0) {
+        try {
+            $softphone->delete();
             return redirect()->route('softphones.index')
-                ->with('error', 'No se puede eliminar el softphone porque tiene extensiones asociadas');
+                ->with('success', 'Softphone eliminado exitosamente');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al eliminar el softphone: ' . $e->getMessage());
         }
+    }
 
-        $softphone->delete();
+    public function export(Request $request)
+    {
+        $softphones = Softphone::all();
 
-        return redirect()->route('softphones.index')
-            ->with('success', 'Softphone eliminado exitosamente');
+        switch ($request->format) {
+            case 'excel':
+                return Excel::download(new SoftphonesExport($softphones), 'softphones_' . now()->format('Y-m-d') . '.xlsx');
+
+            case 'csv':
+                return Excel::download(new SoftphonesExport($softphones), 'softphones_' . now()->format('Y-m-d') . '.csv', \Maatwebsite\Excel\Excel::CSV);
+
+            case 'pdf':
+                $headings = [
+                    'Usuario',
+                    'Dispositivo',
+                    'Versión',
+                    'Estado',
+                    'Última Actualización'
+                ];
+
+                $rows = $softphones->map(function ($softphone) {
+                    return [
+                        $softphone->usuario,
+                        $softphone->dispositivo,
+                        $softphone->version ?? 'N/A',
+                        $softphone->estado,
+                        $softphone->updated_at ? $softphone->updated_at->format('d/m/Y H:i') : 'N/A'
+                    ];
+                });
+
+                $pdf = PDF::loadView('exports.pdf', [
+                    'headings' => $headings,
+                    'rows' => $rows
+                ]);
+                return $pdf->download('softphones_' . now()->format('Y-m-d') . '.pdf');
+
+            default:
+                return back()->with('error', 'Formato de exportación no válido');
+        }
     }
 }

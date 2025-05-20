@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid">
     <h1 class="mb-4">Dashboard</h1>
-    
+
     <div class="row">
         <!-- Tarjeta de Extensiones -->
         <div class="col-md-3 mb-4">
@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Tarjeta de Empleados -->
         <div class="col-md-3 mb-4">
             <div class="card bg-success text-white h-100">
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Tarjeta de Sedes -->
         <div class="col-md-3 mb-4">
             <div class="card bg-warning text-white h-100">
@@ -63,7 +63,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Tarjeta de Ubicaciones -->
         <div class="col-md-3 mb-4">
             <div class="card bg-danger text-white h-100">
@@ -83,7 +83,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row">
         <!-- Últimos Cambios -->
         <div class="col-md-6 mb-4">
@@ -122,7 +122,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Sedes y Ubicaciones -->
         <div class="col-md-6 mb-4">
             <div class="card h-100">

@@ -1,0 +1,917 @@
+/* Colores corporativos */
+:root {
+    --primary: #333333; /* Gris oscuro - era Indigo 700 */
+    --primary-dark: #212121; /* Casi negro - era Indigo 800 */
+    --primary-light: #555555; /* Gris medio - era Indigo 500 */
+    --primary-very-dark: #121212; /* Negro - era Indigo 900 */
+    --secondary-light: #f9fafb; /* Gray 50 */
+    --accent: #757575; /* Gris acento */
+    --success: #4caf50; /* Verde adaptado */
+    --warning: #ffc107; /* Amarillo adaptado */
+    --danger: #f44336; /* Rojo adaptado */
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --table-header: #333333; /* Gris oscuro */
+    --table-hover: #e0e0e0; /* Gris claro hover */
+    --table-stripe: #f5f5f5; /* Gris muy claro alternado */
+    --table-header-start: #333333; /* Gris oscuro */
+    --table-header-end: #555555; /* Gris medio */
+}
+
+/* Estilos generales */
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--primary-dark) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--secondary-light) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+}
+
+.btn-info {
+    background-color: #757575 !important;
+    border-color: #757575 !important;
+}
+
+.btn-info:hover {
+    background-color: #666666 !important;
+    border-color: #666666 !important;
+}
+
+/* Botones de exportación */
+.flex-wrap a,
+.flex-wrap button {
+    background-color: var(--primary) !important;
+    color: var(--secondary-light) !important;
+    border-color: var(--primary) !important;
+    transition: all 0.2s ease-in-out !important;
+    width: auto !important;
+    min-width: -webkit-fill-available !important;
+    min-width: -moz-available !important;
+    min-width: fit-content !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.5rem 1rem !important;
+    gap: 0.5rem !important;
+}
+
+.flex-wrap a:hover,
+.flex-wrap button:hover {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    transform: translateY(-1px) !important;
+}
+
+.flex-wrap a:focus,
+.flex-wrap button:focus {
+    background-color: var(--primary-dark) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--primary-light) !important;
+}
+
+.flex-wrap a:active,
+.flex-wrap button:active {
+    background-color: var(--primary-very-dark) !important;
+    transform: translateY(1px) !important;
+}
+
+.flex-wrap a i,
+.flex-wrap button i {
+    font-size: 1rem !important;
+    margin: 0 !important;
+}
+
+/* Navegación */
+.nav-tabs {
+    border-bottom: 2px solid var(--gray-300);
+    margin-bottom: 1rem;
+    background-color: var(--gray-100);
+    border-radius: 8px 8px 0 0;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+}
+
+.nav-tabs .nav-item {
+    margin-bottom: -2px;
+    margin-right: 4px;
+}
+
+.nav-tabs .nav-link {
+    border: 2px solid transparent;
+    border-radius: 8px 8px 0 0;
+    color: var(--gray-600) !important;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s ease-in-out;
+    background-color: transparent;
+    position: relative;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: var(--gray-200);
+    background-color: var(--gray-200) !important;
+    color: var(--primary) !important;
+    transform: translateY(-2px);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary) !important;
+    border-color: var(--gray-300);
+    border-bottom-color: var(--secondary-light);
+    background-color: var(--secondary-light) !important;
+    font-weight: 600;
+    transform: translateY(-2px);
+}
+
+.nav-tabs .nav-link i {
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+.tab-content {
+    background-color: var(--secondary-light);
+    border-radius: 0 0 8px 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ajustes para las cards dentro de pestañas */
+.tab-content .card {
+    border: 1px solid var(--gray-200);
+    margin-bottom: 1rem;
+}
+
+.tab-content .card:last-child {
+    margin-bottom: 0;
+}
+
+.tab-content .table {
+    margin-bottom: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.5rem;
+    }
+
+    .nav-tabs .nav-item {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Cards */
+.card-header {
+    background-color: var(--primary) !important;
+    color: var(--secondary-light) !important;
+}
+
+.card-header.bg-info {
+    background-color: var(--primary-light) !important;
+}
+
+.card-header.bg-warning {
+    background-color: var(--gray-600) !important;
+    color: var(--secondary-light) !important;
+}
+
+/* Tablas mejoradas */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--gray-300);
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: var(--secondary-light);
+}
+
+.table thead tr {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+}
+
+.table thead th {
+    color: white !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 1rem !important;
+    vertical-align: middle !important;
+    border-bottom: none !important;
+    white-space: nowrap;
+    position: relative;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease-in-out;
+}
+
+.table tbody tr:hover {
+    background-color: var(--table-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.table td {
+    padding: 0.75rem 1rem !important;
+    vertical-align: middle !important;
+    color: var(--gray-700);
+    border-bottom: 1px solid var(--gray-200) !important;
+    font-size: 0.9rem;
+}
+
+/* Botones en tablas */
+.table .btn-group {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.table .btn {
+    padding: 0.4rem 0.6rem !important;
+    font-size: 0.8rem !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+    min-width: 32px;
+}
+
+.table .btn i {
+    font-size: 0.9rem;
+}
+
+.table .btn-info {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: white !important;
+}
+
+.table .btn-warning {
+    background-color: var(--warning) !important;
+    border-color: var(--warning) !important;
+    color: var(--gray-900) !important;
+}
+
+.table .btn-danger {
+    background-color: var(--danger) !important;
+    border-color: var(--danger) !important;
+    color: white !important;
+}
+
+/* Cards mejoradas */
+.card {
+    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    background-color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%) !important;
+    color: white !important;
+    border-radius: 11px 11px 0 0 !important;
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Responsive para tablas */
+@media (max-width: 768px) {
+    .table-responsive {
+        border-radius: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table td {
+        white-space: nowrap;
+    }
+
+    .table .btn-group {
+        position: sticky;
+        right: 0;
+        background: inherit;
+        padding: 0.5rem;
+        box-shadow: -4px 0 8px rgba(0,0,0,0.1);
+    }
+}
+
+/* Paginación mejorada */
+.pagination {
+    gap: 0.25rem;
+}
+
+.page-link {
+    border-radius: 6px !important;
+    padding: 0.5rem 0.75rem;
+    color: var(--primary);
+    border: 1px solid var(--gray-300);
+    transition: all 0.2s ease-in-out;
+}
+
+.page-link:hover {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Badges mejorados */
+.badge {
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+/* Inputs mejorados */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid var(--gray-300);
+    padding: 0.5rem 0.75rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+/* Select mejorados */
+.form-select {
+    border-radius: 8px;
+    border: 1px solid var(--gray-300);
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    background-position: right 0.75rem center;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+/* Badges */
+.badge.bg-success {
+    background-color: var(--success) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--danger) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--warning) !important;
+    color: var(--gray-900) !important;
+}
+
+.badge.bg-info {
+    background-color: var(--primary-light) !important;
+    color: var(--secondary-light) !important;
+}
+
+/* Links */
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* Botones de acción */
+.btn-warning {
+    background-color: #f1c40f !important;
+    border-color: #f1c40f !important;
+}
+
+.btn-warning:hover {
+    background-color: #f39c12 !important;
+    border-color: #f39c12 !important;
+}
+
+.btn-danger {
+    background-color: #e74c3c !important;
+    border-color: #e74c3c !important;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b !important;
+    border-color: #c0392b !important;
+}
+
+/* Modales */
+.modal-header {
+    background-color: var(--primary);
+    color: var(--secondary-light);
+}
+
+.modal-header .btn-close {
+    color: var(--secondary-light);
+}
+
+/* Sidebar y Navbar */
+.sidebar {
+    background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 100%) !important;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.navbar {
+    background: linear-gradient(270deg, var(--primary-dark) 0%, var(--primary) 100%) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Elementos del sidebar */
+.sidebar .nav-link {
+    color: var(--secondary-light) !important;
+    transition: all 0.2s ease-in-out !important;
+    border-radius: 8px !important;
+    margin: 4px 8px !important;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+}
+
+.sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    font-weight: 500 !important;
+}
+
+.sidebar .nav-link i {
+    width: 20px !important;
+    text-align: center !important;
+    margin-right: 8px !important;
+    opacity: 0.9 !important;
+}
+
+.sidebar .nav-link:hover i,
+.sidebar .nav-link.active i {
+    opacity: 1 !important;
+}
+
+/* Elementos activos */
+.nav-link.active {
+    background-color: var(--gray-700) !important;
+    color: var(--secondary-light) !important;
+}
+
+/* Hover states */
+.nav-link:hover {
+    background-color: var(--gray-600) !important;
+}
+
+/* Table hover */
+.table tbody tr:hover {
+    background-color: var(--gray-200) !important;
+}
+
+/* Search container */
+.search-results-container {
+    background-color: var(--secondary-light) !important;
+    border: 1px solid var(--gray-300) !important;
+}
+
+.search-result-item:hover {
+    background-color: var(--gray-200) !important;
+}
+
+/* Estilos específicos para el Dashboard */
+.card.bg-warning {
+    background-color: #f59e0b !important;
+}
+
+.card.bg-warning .text-white {
+    color: #1f2937 !important;
+}
+
+.card.bg-warning .card-footer a {
+    color: #1f2937 !important;
+}
+
+.card.bg-warning .card-footer i {
+    color: #1f2937 !important;
+}
+
+/* Mejoras en las tarjetas del dashboard */
+.card .display-4 {
+    font-size: 2.5rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.card h6.text-uppercase {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Mejoras en la tabla de sedes y ubicaciones */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-stripe) !important;
+}
+
+.table-striped tbody tr td {
+    color: var(--gray-800) !important;
+    font-weight: 500 !important;
+}
+
+.table thead th {
+    background: linear-gradient(90deg, var(--table-header-start) 0%, var(--table-header-end) 100%);
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 1rem !important;
+    font-size: 0.875rem !important;
+}
+
+/* Mejoras en los badges */
+.badge {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    padding: 0.35em 0.65em !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--warning) !important;
+    color: var(--gray-900) !important;
+}
+
+/* Mejoras en los enlaces de acciones rápidas */
+.list-group-item-action {
+    color: var(--gray-800) !important;
+    font-weight: 500 !important;
+}
+
+.list-group-item-action:hover {
+    background-color: var(--gray-100) !important;
+    color: var(--primary) !important;
+}
+
+.list-group-item-action i {
+    width: 20px !important;
+    text-align: center !important;
+    margin-right: 8px !important;
+}
+
+/* Card headers en el dashboard */
+.card-header.bg-light {
+    background-color: var(--secondary-light) !important;
+    border-bottom: 1px solid var(--gray-200) !important;
+}
+
+.card-header.bg-light h5 {
+    color: var(--gray-800) !important;
+    margin-bottom: 0 !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+}
+
+/* Mejoras en la visualización de tablas responsivas */
+.table-responsive {
+    border-radius: 8px !important;
+    overflow-x: auto !important;
+    min-width: 100% !important;
+}
+
+.table thead th {
+    white-space: normal !important;
+    min-width: 100px !important;
+    background: linear-gradient(90deg, var(--table-header-start) 0%, var(--table-header-end) 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 1rem !important;
+    font-size: 0.875rem !important;
+    vertical-align: middle !important;
+    text-align: left !important;
+}
+
+/* Columna de acciones siempre visible */
+.table th:last-child,
+.table td:last-child {
+    position: sticky !important;
+    right: 0 !important;
+    min-width: 130px !important;
+    background-color: white !important;
+    box-shadow: -5px 0 5px rgba(0, 0, 0, 0.1) !important;
+    text-align: center !important;
+    z-index: 1 !important;
+}
+
+.table th:last-child {
+    background: linear-gradient(90deg, var(--table-header-start) 0%, var(--table-header-end) 100%) !important;
+}
+
+/* Botones de acción en tablas */
+.table .btn-group {
+    display: flex !important;
+    gap: 0.25rem !important;
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
+}
+
+.table .btn {
+    padding: 0.4rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 32px !important;
+    height: 32px !important;
+}
+
+.table .btn i {
+    font-size: 0.875rem !important;
+}
+
+/* Mejoras en títulos de tablas */
+.table thead th {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 2 !important;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+    .table thead th {
+        font-size: 0.75rem !important;
+        padding: 0.75rem 0.5rem !important;
+    }
+
+    .table tbody td {
+        font-size: 0.875rem !important;
+        padding: 0.5rem !important;
+    }
+
+    .table .btn {
+        padding: 0.35rem !important;
+        min-width: 28px !important;
+        height: 28px !important;
+    }
+
+    .table .btn i {
+        font-size: 0.75rem !important;
+    }
+
+    /* Asegurar que los botones de acción sean siempre visibles */
+    .table td:last-child {
+        padding-right: 0.5rem !important;
+        min-width: 110px !important;
+    }
+}
+
+/* Tooltips para botones en móvil */
+.table .btn[data-bs-toggle="tooltip"] {
+    position: relative !important;
+}
+
+.table .btn[data-bs-toggle="tooltip"]:hover::after {
+    content: attr(title) !important;
+    position: absolute !important;
+    bottom: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    color: white !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 4px !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap !important;
+    z-index: 1000 !important;
+}
+
+/* Estilos para textos en tarjetas oscuras */
+.bg-primary .text-white,
+.bg-success .text-white,
+.bg-danger .text-white {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilos específicos para tablas en reportes */
+.report-table {
+    border: 2px solid var(--primary) !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 2rem !important;
+    background-color: white !important;
+}
+
+.report-table thead th {
+    background: var(--primary) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 0.9rem !important;
+    padding: 1rem !important;
+    border: 1px solid var(--primary-dark) !important;
+    text-align: left !important;
+}
+
+.report-table tbody td {
+    padding: 0.75rem 1rem !important;
+    border: 1px solid var(--gray-300) !important;
+    color: var(--gray-800) !important;
+    font-size: 0.9rem !important;
+}
+
+.report-table tbody tr:nth-child(even) {
+    background-color: var(--gray-100) !important;
+}
+
+.report-table tbody tr:hover {
+    background-color: var(--gray-200) !important;
+}
+
+/* Estilos para totales y resúmenes en reportes */
+.report-table tfoot td {
+    background-color: var(--gray-100) !important;
+    font-weight: 600 !important;
+    border-top: 2px solid var(--primary) !important;
+    padding: 0.75rem 1rem !important;
+    color: var(--gray-900) !important;
+}
+
+/* Estilos para la sección de filtros aplicados */
+.applied-filters {
+    background-color: var(--gray-100) !important;
+    border: 1px solid var(--gray-300) !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.applied-filters h6 {
+    color: var(--gray-700) !important;
+    margin-bottom: 0.5rem !important;
+    font-weight: 600 !important;
+}
+
+.applied-filters ul {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.applied-filters li {
+    display: inline-block !important;
+    background-color: white !important;
+    border: 1px solid var(--gray-300) !important;
+    border-radius: 4px !important;
+    padding: 0.25rem 0.75rem !important;
+    margin-right: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 0.875rem !important;
+    color: var(--gray-700) !important;
+}
+
+/* Estilos para el encabezado del reporte */
+.report-header {
+    margin-bottom: 2rem !important;
+    padding-bottom: 1rem !important;
+    border-bottom: 2px solid var(--primary) !important;
+}
+
+.report-header h1 {
+    color: var(--primary) !important;
+    font-size: 1.75rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.report-header .report-meta {
+    color: var(--gray-600) !important;
+    font-size: 0.875rem !important;
+}
+
+/* Estilos para la paginación en reportes */
+.report-pagination {
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid var(--gray-300) !important;
+    font-size: 0.875rem !important;
+    color: var(--gray-600) !important;
+    text-align: right !important;
+}
+
+/* Estilos para botones de exportación en reportes */
+.btn-group .btn {
+    padding: 0.5rem 1.25rem !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease-in-out !important;
+    border-radius: 6px !important;
+    margin-right: 0.5rem !important;
+}
+
+.btn-group .btn:last-child {
+    margin-right: 0 !important;
+}
+
+.btn-group .btn i {
+    font-size: 1rem !important;
+    margin-right: 0.5rem !important;
+}
+
+.btn-group .btn-success {
+    background-color: var(--success) !important;
+    border-color: var(--success) !important;
+}
+
+.btn-group .btn-success:hover {
+    background-color: #0d9488 !important;
+    border-color: #0d9488 !important;
+}
+
+.btn-group .btn-danger {
+    background-color: var(--danger) !important;
+    border-color: var(--danger) !important;
+}
+
+.btn-group .btn-danger:hover {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+}
+
+.btn-group .btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-group .btn-primary:hover {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+}

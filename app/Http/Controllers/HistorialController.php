@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Historial;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HistorialController extends Controller
 {
@@ -14,7 +15,18 @@ class HistorialController extends Controller
      */
     public function index()
     {
-        $historiales = Historial::orderBy('created_at', 'desc')->get();
+        // Si es administrador, muestra todos los registros
+        if (Auth::user()->role === 'admin') {
+            $historiales = Historial::with('usuario')
+                                   ->orderBy('created_at', 'desc')
+                                   ->get();
+        } else {
+            // Si no es administrador, solo muestra sus propios registros
+            $historiales = Historial::where('usuario_id', Auth::id())
+                                   ->orderBy('created_at', 'desc')
+                                   ->get();
+        }
+        
         return view('historial.index', compact('historiales'));
     }
 

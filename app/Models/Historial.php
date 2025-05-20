@@ -39,6 +39,6 @@ class Historial extends Model
 
     public function extension()
     {
-        return $this->belongsTo(Extension::class, 'registro_id', 'id');
+        return $this->belongsTo(Extension::class, 'registro_id', 'id_extension');
     }
 }

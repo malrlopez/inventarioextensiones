@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sede;
+use App\Exports\SedesExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SedeController extends Controller
 {
@@ -29,15 +32,21 @@ class SedeController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre_sede' => 'required|unique:sedes,nombre_sede',
-            'direccion' => 'required',
-        ]);
+        $validation = $this->validateWithCustomMessages($request->all(), Sede::$rules);
 
-        Sede::create($request->all());
+        if ($validation !== true) {
+            return $validation;
+        }
 
-        return redirect()->route('sedes.index')
-            ->with('success', 'Sede creada exitosamente');
+        try {
+            Sede::create($request->all());
+            return redirect()->route('sedes.index')
+                ->with('success', 'Sede creada exitosamente.');
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Error al crear la sede: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     /**
@@ -62,15 +71,25 @@ class SedeController extends Controller
      */
     public function update(Request $request, Sede $sede)
     {
-        $request->validate([
-            'nombre_sede' => 'required|unique:sedes,nombre_sede,' . $sede->id_sede . ',id_sede',
-            'direccion' => 'required',
-        ]);
+        $rules = Sede::$rules;
+        // Modificar las reglas unique para excluir el registro actual
+        $rules['nombre_sede'] = 'required|unique:sedes,nombre_sede,' . $sede->id_sede . ',id_sede';
 
-        $sede->update($request->all());
+        $validation = $this->validateWithCustomMessages($request->all(), $rules);
 
-        return redirect()->route('sedes.index')
-            ->with('success', 'Sede actualizada exitosamente');
+        if ($validation !== true) {
+            return $validation;
+        }
+
+        try {
+            $sede->update($request->all());
+            return redirect()->route('sedes.index')
+                ->with('success', 'Sede actualizada exitosamente.');
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Error al actualizar la sede: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     /**
@@ -88,5 +107,48 @@ class SedeController extends Controller
 
         return redirect()->route('sedes.index')
             ->with('success', 'Sede eliminada exitosamente');
+    }
+
+    public function export(Request $request)
+    {
+        $sedes = Sede::all();
+
+        switch ($request->format) {
+            case 'excel':
+                return Excel::download(new SedesExport($sedes), 'sedes_' . now()->format('Y-m-d') . '.xlsx');
+
+            case 'csv':
+                return Excel::download(new SedesExport($sedes), 'sedes_' . now()->format('Y-m-d') . '.csv', \Maatwebsite\Excel\Excel::CSV);
+
+            case 'pdf':
+                $headings = [
+                    'Nombre',
+                    'Ciudad',
+                    'Dirección',
+                    'Teléfono',
+                    'Estado',
+                    'Última Actualización'
+                ];
+
+                $rows = $sedes->map(function ($sede) {
+                    return [
+                        $sede->nombre_sede,
+                        $sede->ciudad ?? 'N/A',
+                        $sede->direccion ?? 'N/A',
+                        $sede->telefono ?? 'N/A',
+                        $sede->estado,
+                        $sede->updated_at ? $sede->updated_at->format('d/m/Y H:i') : 'N/A'
+                    ];
+                });
+
+                $pdf = PDF::loadView('exports.pdf', [
+                    'headings' => $headings,
+                    'rows' => $rows
+                ]);
+                return $pdf->download('sedes_' . now()->format('Y-m-d') . '.pdf');
+
+            default:
+                return back()->with('error', 'Formato de exportación no válido');
+        }
     }
 }

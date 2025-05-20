@@ -95,7 +95,18 @@
                             </tr>
                             <tr>
                                 <th>Ubicación:</th>
-                                <td>{{ $switchEquipo->rack->ubicacion ?? 'No especificada' }}</td>
+                                <td>
+                                    @if($switchEquipo->rack->ubicacion)
+                                        <strong>Planta telefónica:</strong> {{ $switchEquipo->rack->ubicacion->planta_telefonica }}<br>
+                                        <strong>Cuarto técnico:</strong> {{ $switchEquipo->rack->ubicacion->cuarto_tecnico }}<br>
+                                        <strong>Rack:</strong> {{ $switchEquipo->rack->ubicacion->rack }}<br>
+                                        <strong>Patch Panel:</strong> {{ $switchEquipo->rack->ubicacion->patch_panel }}<br>
+                                        <strong>Faceplate:</strong> {{ $switchEquipo->rack->ubicacion->faceplate }}<br>
+                                        <strong>Oficina:</strong> {{ $switchEquipo->rack->ubicacion->oficina }}
+                                    @else
+                                        No especificada
+                                    @endif
+                                </td>
                             </tr>
                             <tr>
                                 <th>Estado:</th>
